@@ -58,7 +58,6 @@ async function fetchUserData() {
         userCard.innerHTML = `<p class="error">Rate limit exceded 😞! Please wait a few minutes and try again.</p>`;
       }else if (profileRes.status === 404) {
         userCard.innerHTML = `<p class="error">User "${username}" not found 😞.</p>`;
-
         if (userInput.value.trim()) debounce(fetchUserData(), 1000);
       } else {
         defaultText.innerHTML = `<p class="error">Error fetching data (${profileRes.status}) not found 😞.</p>`
@@ -125,7 +124,7 @@ languageFilter.addEventListener('change', (e) => {
   const selectedLanguage = e.target.value;
 
   if (selectedLanguage === 'all') {
-    displayRepository(allRepositories);
+    displayRepository(allRepository);
   } else {
     const filteredRepos = allRepository.filter(repo => {
       const repoLang = repo.language || 'No Language';
@@ -140,9 +139,11 @@ languageFilter.addEventListener('change', (e) => {
 // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 // xxxxxxxxx Event Listners xxxxxxxxxxxxxx
 // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+const debounceFetch = debounce(fetchUserData, 1000);
+
 userInput.addEventListener('input', () => {
   if (userInput.value.trim()) {
-    debounce(fetchUserData(), 1000);
+    debounceFetch();
   }
 });
 
